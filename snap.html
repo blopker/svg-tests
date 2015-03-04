@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+
+    body {
+      background: #222;
+      font: 10px sans-serif;
+      margin: auto;
+      position: relative;
+      width: 960px;
+    }
+
+    svg {
+      width: 960px;
+      height: 800px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <svg class="js-arcsvg">
+  </svg>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.3.0/snap.svg-min.js"></script>
+
+<script>
+
+var width = 960,
+    height = 800,
+    radius = Math.min(width, height) / 3,
+    s = Snap('.js-arcsvg'),
+    path = "",
+    arc = s.path(path),
+    startY = radius;
+
+arc.attr({
+  stroke: 'hsl(-180,50%,50%)',
+  fill: 'none',
+  strokeWidth: 20,
+  'stroke-linecap': 'round'
+});
+
+s.g(arc).attr({
+  'transform': 'translate(' + width / 2 + ',' + height / 2 + ') rotate(235)'
+});
+
+function run(percent) {
+    var endpoint = percent*360;
+    Snap.animate(0, endpoint,   function (d) {
+        var radians = (Math.PI * d) / 180,
+            endy = -radius * Math.cos(radians),
+            endx = radius * Math.sin(radians),
+            largeArc = radians > Math.PI ? 1 : 0,
+            M = 'M  0,' + (-radius) + ' ';
+
+        var path = M + "A "+radius+","+radius+" 0 "+largeArc+",1 "+endx+","+endy;
+
+        arc.attr({'d': path});
+
+    }, 2000, mina.easeinout);
+}
+
+run(70/100);
+
+</script>
+
+
+</body>
+</html>
+

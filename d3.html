@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+
+    body {
+      background: #222;
+      font: 10px sans-serif;
+      margin: auto;
+      position: relative;
+      width: 960px;
+    }
+
+    svg {
+      width: 960px;
+      height: 800px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <svg class="js-arcsvg">
+  </svg>
+
+<script src="http://d3js.org/d3.v3.js"></script>
+
+<script>
+
+var width = 960,
+    height = 800,
+    radius = Math.min(width, height) / 3,
+    startPercentage = 0.2,
+    startAngle = startPercentage * 2 * Math.PI;
+
+var arc = d3.svg.arc()
+    .startAngle(startAngle)
+    .endAngle(function(d) { return d.value * 2 * Math.PI; })
+    .innerRadius(radius)
+    .outerRadius(radius);
+
+var svg = d3.select(".js-arcsvg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ") rotate(180)");
+
+svg.append("path")
+  .style("stroke", "hsl(-180,50%,50%)")
+  .style("stroke-width", 20)
+  .style("stroke-linejoin", "round");
+
+function arcTween(d) {
+  var i = d3.interpolateNumber(startPercentage, d.value - startPercentage);
+  return function(t) { d.value = i(t); return arc(d); };
+}
+
+function run (percentage) {
+svg.select("path")
+ .datum({value: percentage})
+ .transition()
+ .duration(2000)
+ .attrTween("d", arcTween);
+}
+
+
+run(0.8);
+
+</script>
+
+
+</body>
+</html>
+
